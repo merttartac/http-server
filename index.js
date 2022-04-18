@@ -19,7 +19,7 @@ const friends = [
   },
 ];
 
-// our request listener... both req and res objects are streams !
+// our request listener... both req and res objects are STREAMS !
 server.on('request', (req, res) => {
   const items = req.url.split("/");
   // ex:   /friends/2 => ['', 'friends', '2']
@@ -30,6 +30,7 @@ server.on('request', (req, res) => {
       console.log('Request: %o', friend);
       friends.push(JSON.parse(friend));
     });
+    // both req and res objects are STREAMS !
     req.pipe(res);
   } else if (req.method === 'GET' && items[1] === "friends") {
     res.statusCode = 200;
