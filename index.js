@@ -2,6 +2,8 @@ const http = require("http");
 
 const PORT = 3000;
 
+const server = http.createServer();
+
 const friends = [
   {
     id: 0,
@@ -18,11 +20,18 @@ const friends = [
 ];
 
 // our request listener... both req and res objects are streams !
-const server = http.createServer((req, res) => {
+server.on('request', (req, res) => {
   const items = req.url.split("/");
   // ex:   /friends/2 => ['', 'friends', '2']
 
-  if (items[1] === "friends") {
+  if (req.method === 'POST' && items[1] === 'friends') {
+    req.on('data', (data) => {
+      const friend = data.toString();
+      console.log('Request: %o', friend);
+      friends.push(JSON.parse(friend));
+    })
+
+  } else if (req.method === 'GET' && items[1] === "friends") {
     res.statusCode = 200;
     res.setHeader = ("Content-Type", "application/json");
 
